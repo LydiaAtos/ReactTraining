@@ -20,8 +20,7 @@ setLoginStatus() {
 <div>
 <p>UserName : <input type="text"></input>   </p>
 <p>Password : <input type="text"></input>   </p>
-<ButtonReact variant='danger' value='Submit'>Submit</ButtonReact>
-<ButtonReact variant="primary" onClick={() => this.setLoginStatus()}  >Primary</ButtonReact>
+<ButtonReact variant="primary" onClick={() => this.setLoginStatus()}  >Login</ButtonReact>
 </div>
 
         );
