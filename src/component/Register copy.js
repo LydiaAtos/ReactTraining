@@ -1,9 +1,41 @@
 import React, { Component } from 'react';
 import ButtonReact from 'react-bootstrap/Button';
 import data from '../assest/autoparts.json';
-import SimpleReactValidator from 'simple-react-validator';
+import validator from 'validation';
 
 
+const required = (value) => {
+    if (!value.toString().trim().length) {
+      // We can return string or jsx as the 'error' prop for the validated Component
+      return 'require';
+    }
+  };
+   
+  const email = (value) => {
+    if (!validator.isEmail(value)) {
+      return `${value} is not a valid email.`
+    }
+  };
+   
+  const lt = (value, props) => {
+    // get the maxLength from component's props
+    if (!value.toString().trim().length > props.maxLength) {
+      // Return jsx
+      return <span className="error">The value exceeded {props.maxLength} symbols.</span>
+    }
+  };
+   
+  const password = (value, props, components) => {
+    // NOTE: Tricky place. The 'value' argument is always current component's value.
+    // So in case we're 'changing' let's say 'password' component - we'll compare it's value with 'confirm' value.
+    // But if we're changing 'confirm' component - the condition will always be true
+    // If we need to always compare own values - replace 'value' with components.password[0].value and make some magic with error rendering.
+    if (value !== components['confirm'][0].value) { // components['password'][0].value !== components['confirm'][0].value
+      // 'confirm' - name of input
+      // components['confirm'] - array of same-name components because of checkboxes and radios
+      return <span className="error">Passwords are not equal.</span>
+    }
+  };
 
 
 
@@ -13,14 +45,8 @@ export default class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {"hasError" : false,
-    "errorMessage": "",
-"email" : "",
-"firstname" : "",
-"lastname" : "",
-"username" : "",
-"password" : ""};
+    "errorMessage": ""};
     this.RegisterRef = React.createRef();
-    this.validator = new SimpleReactValidator();
     }
     
     render() {
@@ -30,59 +56,26 @@ export default class Register extends Component {
               throw new Error('I crashed!');
             }
         return(
-            <div ref={this.RegisterRef} className="form-group">
+            <div ref={this.RegisterRef}>
                 <p id="error" style={{ color: 'red' }}>{this.state.errorMessage}</p>
-
-                <p style={{ color: 'red' }}>{this.validator.message('firstname', this.state.firstname, 'required')}</p> 
-                <p>First Name : <input type="text" value={this.state.firstname} onChange={this.setEmail("firstname")}></input>   </p>
-
-                <p style={{ color: 'red' }}>{this.validator.message('lastname', this.state.lastname, 'required')}</p> 
-                <p>Last Name : <input type="text" value={this.state.lastname} onChange={this.setEmail("lastname")}></input>   </p>
-
-                <p style={{ color: 'red' }}>{this.validator.message('email', this.state.email, 'required|email')}</p> 
-                <p>Email : <input type="text" value={this.state.email} onChange={this.setEmail("email")}></input>   </p>
-
-                <p style={{ color: 'red' }}>{this.validator.message('username', this.state.username, 'required')}</p> 
-                <p>User Name : <input type="text" value={this.state.username} onChange={this.setEmail("username")}></input>   </p>
-
-                <p style={{ color: 'red' }}>{this.validator.message('password', this.state.email, 'required')}</p> 
-                <p>Password : <input type="text" value={this.state.password} onChange={this.setEmail("password")}></input>   </p>
-
-                <ButtonReact variant="primary" onClick={() => this.setRegisterStatus()}>Register</ButtonReact>
-                
+                <p>First Name : <input type="text" id="first_name"></input>   </p>
+                <p>Last Name : <input type="text"></input>   </p>
+                <p>Email : <input type="text"></input>   </p>
+                <p>User Name : <input type="text"></input>   </p>
+                <p>Password : <input type="text"></input>   </p>
+                <ButtonReact variant="primary" onClick={() => this.setRegisterStatus()}  >Register</ButtonReact>
                 {/* <ButtonReact variant="primary" onClick={this.validateForm}  >Register</ButtonReact> */}
                
             </div>
         );        
     }
 
-    setEmail = (key) => (e) => {
-        e.preventDefault();
-        console.log("name " + key);
-        let stateCopy = Object.assign({}, this.state);
-        console.log(stateCopy);
-        stateCopy[key] = e.target.value;
-        this.setState(stateCopy);
-        console.log(stateCopy);
-    }
   
     setRegisterStatus() {
         // this.setState({"hasError" : true,
         // "errorMessage": "error"})
         //throw new Error('I crashed!');
         //this.props.history.push("/");
-
-
-        if (this.validator.allValid()) {
-            this.props.registerState(data.employees[1]);
-          } else {
-            this.validator.showMessages();
-            // rerender to show messages for the first time
-            // you can use the autoForceUpdate option to do this automatically`
-            this.forceUpdate();
-          }
-
-          return;
 
         if(this.RegisterRef.current.childNodes[1].childNodes[1].value == "") {
             this.setState({"hasError" : false,
@@ -113,7 +106,7 @@ export default class Register extends Component {
             return;
         }
 
-        
+        this.props.registerState(data.employees[1]);
     }
 
     // componentDidCatch(error, errorInfo) {

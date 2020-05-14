@@ -13,7 +13,7 @@ export default class extends Component {
         this.loginRef = React.createRef();
     }
 
-setLoginStatus() {
+async setLoginStatus() {
     console.log("current : "+ this.loginRef.current.childNodes[1].childNodes[1].value);
     if(this.loginRef.current.childNodes[1].childNodes[1].value == "") {
         //this.loginRef.error = "please enter username";
@@ -25,6 +25,23 @@ setLoginStatus() {
         "error" : "Please enter password"});
     } else { 
         console.log("props " + JSON.stringify(this.props));
+       // this.props.loginstate(this.state.isLogged, data.employees[0]);
+
+
+        const response = await fetch(`/api/users`, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user: 'Lydia',
+              password: 'password',
+            })
+          });
+        const json = await response.json();
+        console.log("data from server : " + JSON.stringify(json));
+        //this.setState({ data: json });
         this.props.loginstate(this.state.isLogged, data.employees[0]);
     }
     

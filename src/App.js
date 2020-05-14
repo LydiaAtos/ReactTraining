@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Login from './login/Login'
 import Home from './home/home'
+import ErrorBoundary from './component/ErrorBoundary'
 
 import {
   BrowserRouter as Router,
@@ -10,9 +11,6 @@ import {
   Link
 } from "react-router-dom";
 import Register from './component/Register';
-
-
-
 
 class App extends Component {
 
@@ -24,8 +22,24 @@ constructor(props) {
   this.setRegisterStatus = this.setRegisterStatus.bind(this);
 }
 
+componentDidCatch(error, errorInfo) {
+  // You can also log the error to an error reporting service
+  //logErrorToMyService(error, errorInfo);
+
+this.setState( [
+  {"isLogged" : false},
+  {"userDetail" : null},
+  {"hasError" : true}
+]);
+
+console.log("error caught");
+}
+
 render() {
-  if(this.state[0].isLogged) {
+  console.log("render called");
+  if(this.state[2] != undefined && this.state[2].hasError) {
+    return <h1>Error Occured</h1>
+  } else if(this.state[0].isLogged) {
     return <Home userDetail={this.state[1]}/>
     } else {
     return(
@@ -48,7 +62,11 @@ render() {
     />
     {/* <Route exact path='/Register' component={Register} /> */}
     <Route exact path='/Register' 
-    render={props => <Register {...props} registerState={this.setRegisterStatus} />
+    render={props => 
+      <ErrorBoundary>
+      <Register {...props} registerState={this.setRegisterStatus}
+      />
+      </ErrorBoundary>
     }
     />
    
@@ -78,6 +96,12 @@ setLoginStatus(isLogged, data) {
   );
 }
 
+// renderRegister() {
+//   return <ErrorBoundary>
+//   <p>These two counters are inside the same error boundary. If one crashes, the error boundary will replace both of them.</p>
+//   {/* <Register/> */}
+// </ErrorBoundary>
+// }
 
 
 }

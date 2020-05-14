@@ -29,13 +29,33 @@ constructor()
 
 
 componentDidMount() {
-    axios.get(`/parts`)
+    axios.get(`/api/parts`)
       .then(res => {
         const persons = res.data;
         this.setState(persons);
         console.log("api call " + JSON.stringify(persons));
       })
   }
+
+config = JSON.stringify({
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+  });
+  data = {
+    "partName" : "head light"
+  };
+
+ orderParts = () => {
+axios.post('api/order', this.data, this.config)
+.then(
+      res => {
+          console.log(JSON.stringify(res));
+          alert(res.data.orderStatus);
+      }
+  )
+}
 
 render() {
     return(
@@ -55,7 +75,9 @@ render() {
        </Card.Header>
        <Accordion.Collapse eventKey="0">
              <Card.Body><p>Part Name : {item.name} 
-             Part Type : {item.type} <Button variant="dark">Order</Button></p>
+             Part Type : {item.type} 
+             <img src={item.imageURL} alt='image not avaialble' />
+             <Button variant="dark" onClick={this.orderParts}>Order</Button></p>
              </Card.Body>
        </Accordion.Collapse>
 </Card>
