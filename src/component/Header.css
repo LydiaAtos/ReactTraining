@@ -1,3 +1,15 @@
 .div {
     float: left;
 }
+
+.arrange-horizontally > * {
+    text-align: center;
+    float: right;
+}
+
+
+.arrange-horizontally-inline > * {
+    display: inline-block;
+    text-align: center;
+    align-self: center;
+}

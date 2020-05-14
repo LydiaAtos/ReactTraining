@@ -4,6 +4,15 @@ import Header from '../component/Header'
 import Parts from '../component/PartDetails'
 import Inlet from '../assest/inlet.jpg'
 import Outlet from '../assest/outlet.jpg'
+import CartPage from '../component/CartPage';
+import '../component/Header.css'
+
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 
 export default class Home extends Component {
 constructor(props) {
@@ -16,9 +25,19 @@ render() {
     return (
 <div>
 
+<Router>
+<Header company_details={<p>Autozone<br/>#123 landmark</p>} store_details={<p>All in one Store<br/>#987 landmark</p>}/>
+<div className='arrange-horizontally' >
+<Link to="/MyCart">CART</Link>
+<Link to="/home">HOME</Link>
+</div>
+<Route exact path='/MyCart' component={CartPage} />
+<Route exact path='/home' 
+component={Parts}
+ ></Route>
+</Router>
+    
 
-<Header company_details="Demo Company" store_details="Demo Store"/>
-<Parts />
 
 
     {/* 

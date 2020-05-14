@@ -1,0 +1,19 @@
+[{
+    "name": "brake wire",
+    "type": "copper",
+    "imageUrl": "",
+    "count": 2
+},
+{
+    "name": "car seat cover",
+    "type": "leather",
+    "imageUrl": "",
+    "count": 3
+},
+{
+    "name": "tyre",
+    "type": "Apollo",
+    "imageUrl": "",
+    "count": 4
+}
+]
